@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import data from './data'
 import List from './List'
@@ -10,29 +10,38 @@ const Main = () => {
   const [values, setValues] = useState({
     title: '',
     desc: '',
-    isDone: false
+    isDone: ''
   });
 
   const handleChange = (e) => {
     setValues({
-        ...values,
-        [e.target.name]: e.target.value
+      ...values,
+      [e.target.name]: e.target.value
     })
   }
-  
+
   const clearItems = () => setItems([]);
-  
+
+  const form = useRef();
+
+
   const resetItems = () => setItems(data);
 
-  const handleSubmit=(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
     const title = e.target.title.value;
     const desc = e.target.desc.value;
-    const isDone= false;
-  
-    const newItem = {title,desc,isDone}
-  
-    setItems([...items, newItem])
+    const isDone = false;
+
+    const newItem = { title, desc, isDone }
+
+    setItems([newItem, ...items])
+    form.current.reset();
+    setValues({
+      ...values,
+      title: '',
+      desc: ''
+    })
   }
 
   return (
@@ -40,7 +49,7 @@ const Main = () => {
       <button onClick={clearItems}>Borrar todo</button>
       <button onClick={resetItems}>Recargar</button>
 
-      <form onSubmit={handleSubmit} className="form">
+      <form ref={form} onSubmit={handleSubmit} className="form">
         <div>
           <label htmlFor="title">Tarea</label>
           <input type="text" name="title" onChange={handleChange} />
@@ -57,7 +66,7 @@ const Main = () => {
         }
 
       </form>
-      <List props={items} setItems={(list)=>setItems(list)}/>
+      <List props={items} setItems={(list) => setItems(list)} />
     </section>
   )
 };
