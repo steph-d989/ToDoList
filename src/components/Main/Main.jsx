@@ -18,6 +18,16 @@ const Main = () => {
       ...values,
       [e.target.name]: e.target.value
     })
+  
+      setTimeout(()=>{
+        setValues({
+          ...values,
+          title: '',
+          desc: ''
+        })
+      })
+    
+
   }
 
   const clearItems = () => setItems([]);
